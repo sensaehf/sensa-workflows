@@ -5,7 +5,7 @@
 #   1. Verifies the PR name
 
 
-name: %SERVICE_NAME% build and test                                               # <---- Replace with repo name
+name: PR compliance check 
 run-name: ${{ github.head_ref }} | 1/2 (build, test, wait for review)
 
 on:
@@ -15,7 +15,7 @@ on:
 
 jobs:
   verify:
-    if: github.repository_owner == 'MRH-Landlaeknir'
+    if: github.repository_owner == 'sensaehf'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.pr_name.outputs.version }}
