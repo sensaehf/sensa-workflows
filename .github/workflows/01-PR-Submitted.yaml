@@ -1,0 +1,41 @@
+#
+# TEMPLATE WORKFLOW 1
+# This occurs when a PR is created.
+# Tasks:
+#   1. Verifies the PR name
+
+
+name: %SERVICE_NAME% build and test                                               # <---- Replace with repo name
+run-name: ${{ github.head_ref }} | 1/2 (build, test, wait for review)
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, edited ]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    if: github.repository_owner == 'MRH-Landlaeknir'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.pr_name.outputs.version }}
+      prefix: ${{ steps.pr_name.outputs.prefix }}
+      prid: ${{ steps.pr_name.outputs.prid }}
+    steps:
+      - name: Github Context
+        run: echo '${{ toJSON(github) }}'
+
+      # Disabling shallow cloning by specifying the fetch depth
+      - name: Check out the source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Verify Pull Request Name
+        id: pr_name
+        uses: sensaehf/sensa-workflows/.github/general/verify-pr-name@main
+
+      - name: Version
+        run: echo "${{ steps.pr_name.outputs.version }}"
+
+  
